@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - image: prom/prometheus:v2.33.0
+        name: prometheus
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+          - name: config
+            mountPath: /etc/prometheus
+            readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus-config
