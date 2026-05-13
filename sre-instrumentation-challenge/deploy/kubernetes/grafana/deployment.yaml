@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - image: grafana/grafana-oss:8.3.4
+        name: grafana
+        ports:
+        - containerPort: 3000
+        envFrom:
+          - secretRef:
+              name: grafana-config
+        volumeMounts:
+          - name: provisioning
+            mountPath: /etc/grafana/provisioning
+            readOnly: true
+          - name: dashboards
+            mountPath: /etc/grafana/dashboards
+            readOnly: true
+      volumes:
+        - name: provisioning
+          configMap:
+            name: grafana-provisioning
+            items:
+              - key: dashboards.yaml
+                path: dashboards/dashboards.yaml
+              - key: datasource.yaml
+                path: datasources/datasource.yaml
+        - name: dashboards
+          configMap:
+            name: grafana-dashboards

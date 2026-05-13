@@ -98,3 +98,16 @@ $ kubectl create configmap prometheus-config \
 
 * Modified the prometheus configuration to reflect the service name change from `storage_api` to `storage-api`
 
+
+### Grafana
+
+* Generated the kubernetes manifests in the same way as in previous points but also added
+  the environment variables to configure grafana:
+```shell
+$ kubectl create secret generic grafana-config \
+  --from-literal="GF_SECURITY_ADMIN_USER=admin" \
+  --from-literal="GF_SECURITY_ADMIN_PASSWORD=admin" \
+  --from-literal="GF_USERS_ALLOW_SIGN_UP=false" \
+  --dry-run=client \
+  -o yaml > deploy/kubernetes/grafana/secret.yaml
+```
