@@ -27,6 +27,6 @@ def put_bucket(id: str) -> ResponseReturnValue:
 def delete_bucket(id: str) -> ResponseReturnValue:
     if id in data.keys():
         data.pop(id, None)
-        return "", 500
+        return "", 200
 
     return jsonify({"error": "bad request"}), 400, {"Content-Type": "application/json"}

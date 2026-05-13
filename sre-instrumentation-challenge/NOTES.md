@@ -29,3 +29,6 @@
 
   * Go to [Grafana](http://localhost:3000) > Dashboards > New dashboard
 
+* The issue causing the 500 code errors was that the `delete_bucket` function ended up returning a 500 code instead
+  of the correct one, 200. It should be fixed now.
+
