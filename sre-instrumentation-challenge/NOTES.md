@@ -32,3 +32,53 @@
 * The issue causing the 500 code errors was that the `delete_bucket` function ended up returning a 500 code instead
   of the correct one, 200. It should be fixed now.
 
+
+## Step 3: Deployment
+
+* Used a minikube cluster with ingress and a [local registry](https://minikube.sigs.k8s.io/docs/handbook/registry/) 
+  enabled to test the deployment:
+  ```shell
+  $ minikube start --addons=registry,ingress
+  $ docker run --name="registry-proxy" -d --rm -it --network=host alpine ash -c "apk add socat && socat TCP-LISTEN:5000,reuseaddr,fork TCP:$(minikube ip):5000"
+  ```
+
+* For the Storage API:
+  * Modified the service name to `storage-api` because `storage_api` is not compliant with the resource names that kubernetes allows
+  * Built and pushed the docker image to the local registry with:
+  ```shell
+  $ docker build -t localhost:5000/storage-api:latest ./src
+  $ docker push localhost:5000/storage-api
+  ```
+
+  * Created the kubernetes manifest with these commands and modified them accordingly when needed:
+    ```shell
+    $ kubectl create deployment storage-api \
+      --image=localhost:5000/storage-api:latest \
+      --port=5000 \
+      --dry-run=client \
+      -o yaml > deploy/kubernetes/storage-api/deployment.yaml
+    $ kubectl create service clusterip storate-api \
+      --tcp=5000:5000 \
+      --dry-run=client \
+      -o yaml > deploy/kubernetes/storage-api/service.yaml
+    $ kubectl create ingress storage-api \
+      --rule="storage-api.example.local/"=storage-api:5000 \
+      --dry-run=client \ 
+      -o yaml > deploy/kubernetes/storage-api/ingress.yaml
+    ```
+
+  * Created the kubernetes resources with:
+  ```shell
+  $ kubectl apply -f deploy/kubernetes/storage-api
+  ```
+
+  * Added a new line in `/etc/hosts` to resolve the storage-api domain:
+  ```shell
+  $ echo "$(minikube ip) storage-api.example.local" | sudo tee -a /etc/hosts
+  ```
+
+  * Modified the `generate_traffic.sh` script to allow different domains, now it's possible to use it like this:
+  ```shell
+  $ scripts/generate_traffic.sh "storage-api.example.local"
+  ```
+
