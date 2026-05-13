@@ -1,7 +1,7 @@
 from typing import Dict
-from flask import Blueprint, jsonify, request, Response
-from flask.typing import ResponseReturnValue
 
+from flask import Blueprint, jsonify, request
+from flask.typing import ResponseReturnValue
 
 bucket_blueprint = Blueprint("zones", __name__)
 
