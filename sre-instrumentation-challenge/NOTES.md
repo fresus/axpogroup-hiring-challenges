@@ -13,3 +13,19 @@
 * In the docker compose file it could be interesting to use a different user than root to run the containers,
   as it was mentioned in the previous point
 
+
+## Step 2: Visualization
+
+* Steps to reproduce the result of this part:
+  * Start docker compose:
+  ```shell
+  $ docker compose start -d
+  ```
+
+  * Run the script to generate requests:
+  ```shell
+  $ scripts/generate_traffic.sh
+  ```
+
+  * Go to [Grafana](http://localhost:3000) > Dashboards > New dashboard
+
