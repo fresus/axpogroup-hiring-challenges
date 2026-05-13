@@ -111,3 +111,10 @@ $ kubectl create secret generic grafana-config \
   --dry-run=client \
   -o yaml > deploy/kubernetes/grafana/secret.yaml
 ```
+
+
+### Possible next steps
+
+* Add volumes to keep the prometheus and grafana data between deployments
+* Use [kustomize](https://kustomize.io/) or [helm](https://helm.sh/) to parameterize the deployments (container version, configuration, etc.)
+* Use the more convenient official or community helm charts to deploy prometheus and grafana 
