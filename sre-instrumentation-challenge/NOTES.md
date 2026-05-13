@@ -5,7 +5,7 @@
 
 * I'm using the python package [prometheus-flask-exporter](https://github.com/rycus86/prometheus_flask_exporter) 
   to expose the http metrics to prometheus because is easy and convenient.
-* The docker image is midly optimized to work with python but it could be interesting to:
+* The docker image is mildly optimized to work with python but it could be interesting to:
   * Add a WSGI server (e.g. gunicorn)
   * Add a user to run the app instead of using root
   * Add pip cache mounted from the host to avoid installing the same packages on every docker build
@@ -53,21 +53,21 @@ $ docker push localhost:5000/storage-api
 ```
 
 * Generated the kubernetes manifest with these commands and modified them accordingly when needed:
-  ```shell
-  $ kubectl create deployment storage-api \
-    --image=localhost:5000/storage-api:latest \
-    --port=5000 \
-    --dry-run=client \
-    -o yaml > deploy/kubernetes/storage-api/deployment.yaml
-  $ kubectl create service clusterip storate-api \
-    --tcp=5000:5000 \
-    --dry-run=client \
-    -o yaml > deploy/kubernetes/storage-api/service.yaml
-  $ kubectl create ingress storage-api \
-    --rule="storage-api.example.local/"=storage-api:5000 \
-    --dry-run=client \ 
-    -o yaml > deploy/kubernetes/storage-api/ingress.yaml
-  ```
+```shell
+$ kubectl create deployment storage-api \
+  --image=localhost:5000/storage-api:latest \
+  --port=5000 \
+  --dry-run=client \
+  -o yaml > deploy/kubernetes/storage-api/deployment.yaml
+$ kubectl create service clusterip storate-api \
+  --tcp=5000:5000 \
+  --dry-run=client \
+  -o yaml > deploy/kubernetes/storage-api/service.yaml
+$ kubectl create ingress storage-api \
+  --rule="storage-api.example.local/"=storage-api:5000 \
+  --dry-run=client \ 
+  -o yaml > deploy/kubernetes/storage-api/ingress.yaml
+```
 
 * Created the kubernetes resources with:
 ```shell
